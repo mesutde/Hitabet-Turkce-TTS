@@ -1,3 +1,9 @@
+<img width="976" height="857" alt="image" src="https://github.com/user-attachments/assets/db5ab57d-8a3d-4d39-93b5-dff4526ce147" />
+<img width="958" height="604" alt="image" src="https://github.com/user-attachments/assets/d5e16556-0603-4d9d-9f41-b873c686e74f" />
+<img width="958" height="844" alt="image" src="https://github.com/user-attachments/assets/fbb92962-ae03-41a5-bf97-6ad2764357c5" />
+<img width="958" height="856" alt="image" src="https://github.com/user-attachments/assets/3b1e8107-1ef1-44a3-950a-0af28fbd0b1f" />
+
+
 # Hitabet-Turkce-TTS
 
 Çevrimdışı çalışan, iki modelli Türkçe metin-konuşma (TTS) masaüstü stüdyosu. İnternet gerekmez: modeller uygulamayla birlikte gelir, seslendirme tamamen cihazda yapılır.
