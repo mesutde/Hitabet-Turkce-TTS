@@ -1,5 +1,4 @@
-EMA Lightning : [output_1791712412039.wav](https://github.com/user-attachments/files/33300596/output_1791712412039.wav)
-Antalia Mini  : [output_1791712468199.wav](https://github.com/user-attachments/files/33300605/output_1791712468199.wav)
+
 
 <p>
   <b>EMA Lightning:</b><br>
