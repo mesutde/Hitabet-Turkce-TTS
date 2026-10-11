@@ -1,14 +1,6 @@
 
-
-<p>
-  <b>EMA Lightning:</b><br>
-  <audio controls src="https://github.com/user-attachments/files/33300596/output_1791712412039.wav"></audio>
-</p>
-
-<p>
-  <b>Antalia Mini:</b><br>
-  <audio controls src="https://github.com/user-attachments/files/33300605/output_1791712468199.wav"></audio>
-</p>
+EMA Lightning : [output_1791712412039.wav](https://github.com/user-attachments/files/33300596/output_1791712412039.wav)
+Antalia Mini  : [output_1791712468199.wav](https://github.com/user-attachments/files/33300605/output_1791712468199.wav)
 
 
 <img width="976" height="857" alt="image" src="https://github.com/user-attachments/assets/db5ab57d-8a3d-4d39-93b5-dff4526ce147" />
