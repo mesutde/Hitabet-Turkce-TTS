@@ -53,10 +53,40 @@ export default function App() {
   const [models, setModels] = useState<ModelStatus[]>([]);
   const [downloading, setDownloading] = useState<DownloadProgress | null>(null);
   const [presets, setPresets] = useState<VoicePreset[]>([]);
+  const [appVersion, setAppVersion] = useState("");
   const [presetName, setPresetName] = useState("");
   const [activePreset, setActivePreset] = useState<string>("__default");
   const finishedRef = useRef(true);
   const stopRequestedRef = useRef(false);
+  const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  const lastProgressRef = useRef(0);
+
+  const clearFallbackTimer = () => {
+    if (fallbackTimerRef.current) {
+      clearTimeout(fallbackTimerRef.current);
+      fallbackTimerRef.current = undefined;
+    }
+  };
+
+  // Yedek tamamlayici: yalnizca gercekten takilmayi cozer. Saglikli uzun
+  // calma sirasinda kalp atislari (ilerleme/çalma olaylari) geldikce ertelenir.
+  const armFallbackTimer = (ms: number) => {
+    clearFallbackTimer();
+    fallbackTimerRef.current = setTimeout(() => {
+      fallbackTimerRef.current = undefined;
+      if (finishedRef.current || stopRequestedRef.current) return;
+      if (Date.now() - lastProgressRef.current < 15000) {
+        // Hâlâ ilerliyor: kesme, yedeği uzat.
+        armFallbackTimer(15000);
+        return;
+      }
+      finishedRef.current = true;
+      setIsSynthesizing(false);
+      setStatus("Tamamlandı");
+    }, ms);
+  };
 
   const THEME_LIST = ["dark", "light", "sepia", "contrast"] as const;
   const THEME_LABEL: Record<string, string> = {
@@ -90,6 +120,7 @@ export default function App() {
     const unlistenProgress = listen<{ done: number; total: number }>(
       "synthesis-progress",
       (event) => {
+        lastProgressRef.current = Date.now();
         const { done, total } = event.payload;
         if (total > 1) {
           setStatus(`Sentezleniyor... %${Math.round((done / total) * 100)}`);
@@ -97,7 +128,25 @@ export default function App() {
       }
     );
 
+    const unlistenPlayback = listen<{ elapsed: number; total: number }>(
+      "synthesis-playback",
+      (event) => {
+        lastProgressRef.current = Date.now();
+        const { elapsed, total } = event.payload;
+        if (total > 0.5) {
+          setStatus(
+            `Çalınıyor... %${Math.round(
+              Math.min(100, (elapsed / total) * 100)
+            )}`
+          );
+        } else {
+          setStatus("Çalınıyor...");
+        }
+      }
+    );
+
     const unlistenComplete = listen("synthesis-complete", () => {
+      clearFallbackTimer();
       finishedRef.current = true;
       setIsSynthesizing(false);
       if (stopRequestedRef.current) {
@@ -152,17 +201,22 @@ export default function App() {
     invoke<ApiStatus>("api_status")
       .then((st) => setApiStatus(st))
       .catch(() => {});
+    invoke<string>("get_app_version")
+      .then((v) => setAppVersion(v))
+      .catch(() => {});
     refreshDevices().catch(() => {});
     refreshModels().catch(() => {});
     refreshPresets().catch(() => {});
 
     return () => {
       unlistenProgress.then((f) => f());
+      unlistenPlayback.then((f) => f());
       unlistenComplete.then((f) => f());
       unlistenApiProgress.then((f) => f());
       unlistenApiComplete.then((f) => f());
       unlistenDlProgress.then((f) => f());
       unlistenDlComplete.then((f) => f());
+      clearFallbackTimer();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -358,18 +412,16 @@ export default function App() {
     setStatus("Sentezleniyor...");
     finishedRef.current = false;
     stopRequestedRef.current = false;
+    lastProgressRef.current = Date.now();
+    clearFallbackTimer();
     try {
       // Calma Rust tarafinda, secili aygitta, uretildikce baslar.
       await invoke("synthesize", { text, config });
-      // Komut döndü ama tamamlanma olayı gecikebilir/kayıpsa 5 sn yedek:
-      setTimeout(() => {
-        if (!finishedRef.current && !stopRequestedRef.current) {
-          finishedRef.current = true;
-          setIsSynthesizing(false);
-          setStatus("Tamamlandı");
-        }
-      }, 5000);
+      // Komut döndü ama tamamlanma olayı gecikebilir/kayıpsa yedek:
+      // süre metin boyuna göre (harf başına ~300ms, en az 15sn).
+      armFallbackTimer(Math.max(15000, text.trim().length * 300));
     } catch (err) {
+      clearFallbackTimer();
       finishedRef.current = true;
       setStatus(`Hata: ${err}`);
       setIsSynthesizing(false);
@@ -394,6 +446,7 @@ export default function App() {
   const handleStop = async () => {
     stopRequestedRef.current = true;
     finishedRef.current = true;
+    clearFallbackTimer();
     try {
       await invokeWithTimeout(invoke("stop_synthesis"), 2500);
     } catch {
@@ -496,6 +549,7 @@ export default function App() {
       <header className="header">
         <h1>
           Hitabet <span className="subtitle">Türkçe Yapay Ses Stüdyosu</span>
+          {appVersion && <span className="version-badge">v{appVersion}</span>}
         </h1>
         <div className="header-right">
           <select

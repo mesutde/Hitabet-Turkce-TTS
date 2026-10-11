@@ -595,12 +595,36 @@ async fn synthesize(
 
         // Kuyruk bosalana kadar bekle (motor kilidi elde: gercek sira).
         // Durdurulursa erken cikilir; arayuz "Durduruldu" gosterir.
+        // Ayri kalp-atisi thread'i 1 sn'de bir `synthesis-playback` gonderir
+        // ki arayuz, uzun calma sirasinda baglantiyi kopuk sanmasin.
+        // (Bekleme dilimlenemez: wait_until_played kuyruk bosalana dondurmez.)
         let stop_flag = state
             .stop_req
             .lock()
             .map(|r| Arc::clone(&r))
             .unwrap_or_else(|_| Arc::new(AtomicBool::new(false)));
-        player.wait_until_played(total as f32 / rate as f32, &stop_flag);
+        let total_secs = total as f32 / rate as f32;
+        let hb_done = Arc::new(AtomicBool::new(false));
+        let hb_flag = Arc::clone(&hb_done);
+        let hb_app = app.clone();
+        std::thread::spawn(move || {
+            let t0 = std::time::Instant::now();
+            loop {
+                std::thread::sleep(std::time::Duration::from_millis(1000));
+                if hb_flag.load(Ordering::SeqCst) {
+                    break;
+                }
+                let _ = hb_app.emit(
+                    "synthesis-playback",
+                    serde_json::json!({
+                        "elapsed": t0.elapsed().as_secs_f32(),
+                        "total": total_secs,
+                    }),
+                );
+            }
+        });
+        player.wait_until_played(total_secs, &stop_flag);
+        hb_done.store(true, Ordering::SeqCst);
 
         app.emit("synthesis-complete", ()).ok();
         Ok(())
@@ -669,6 +693,12 @@ async fn save_wav(
     })
     .await
     .map_err(|e| format!("Kayit gorevi yarida kaldi: {e}"))?
+}
+
+/// Uygulama sürümü (Cargo.toml tek doğruluk kaynağı; başlıkta gösterilir).
+#[tauri::command]
+fn get_app_version() -> String {
+    env!("CARGO_PKG_VERSION").to_string()
 }
 
 #[tauri::command]
@@ -1466,6 +1496,7 @@ pub fn run() {
             synthesize,
             stop_synthesis,
             save_wav,
+            get_app_version,
             get_config,
             update_config,
             check_model_files,

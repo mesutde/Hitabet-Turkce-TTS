@@ -552,6 +552,19 @@ textarea {
   vertical-align: middle;
 }
 
+.header h1 .version-badge {
+  font-size: 0.4em;
+  font-weight: 600;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: middle;
+  background: none;
+  -webkit-text-fill-color: var(--text-secondary);
+}
+
 /* Ses profilleri */
 .preset-list {
   display: flex;

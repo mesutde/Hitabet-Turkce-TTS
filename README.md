@@ -9,7 +9,7 @@
 - **Ses profilleri:** hız/perde/seed + model ayarlarını isimle kaydedip tek tıkla uygulama
 - **4 görünüm:** Koyu / Açık / Sepya / Kontrast
 
-**Hazır kurulum:** [Releases](../../releases) sayfasından `Hitabet_0.1.0_x64-setup.exe` indirilir; iki model gömülü gelir.
+**Hazır kurulum:** [Releases](../../releases) sayfasından güncel `Hitabet_*_x64-setup.exe` indirilir; iki model gömülü gelir.
 
 ## Kullanılan Modeller ve Teşekkür
 

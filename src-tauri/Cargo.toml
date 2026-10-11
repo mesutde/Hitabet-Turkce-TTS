@@ -1,6 +1,6 @@
 [package]
 name = "ema-lightning-tts"
-version = "0.1.0"
+version = "0.2.0"
 description = "Hitabet: portable Turkish TTS desktop app (EMA Lightning + Antalia Mini)"
 authors = ["EMA Lightning"]
 edition = "2021"
