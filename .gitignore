@@ -1,0 +1,32 @@
+node_modules
+dist
+target
+# Uretilen model dosyalari (export scriptleriyle yeniden uretilir)
+*.onnx
+*.onnx.data
+*.pth
+*.pt
+*.safetensors
+*.f32
+# Test referanslari (.f32) repoda tutulur - cargo test icin gerekli
+!models/antalia_ref/*.f32
+!models/ref/*.f32
+*.wav
+output_*.wav
+tensor_shapes.txt
+# Calisma zamani (exe yaninda olusur, tasinabilir)
+settings.json
+presets.json
+# Yayin paketleri (Release'te dagitilir)
+*.msi
+*.exe
+Hitabet-*-portable.zip
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
+# Python artefaktlari + yedek referans bicimi (testler .f32/.i64 kullanir)
+__pycache__/
+*.pyc
+*.npy

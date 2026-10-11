@@ -1,0 +1,50 @@
+[package]
+name = "ema-lightning-tts"
+version = "0.1.0"
+description = "Hitabet: portable Turkish TTS desktop app (EMA Lightning + Antalia Mini)"
+authors = ["EMA Lightning"]
+edition = "2021"
+
+[lib]
+name = "ema_lightning_tts_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+axum = "0.8"
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "net", "sync", "time"] }
+tower-http = { version = "0.6", features = ["cors"] }
+ort = { version = "2.0.0-rc.13", features = ["download-binaries", "ndarray"] }
+ndarray = "0.17"
+tokenizers = "0.21"
+anyhow = "1"
+thiserror = "2"
+log = "0.4"
+env_logger = "0.11"
+cpal = "0.15"
+hound = "3.5"
+rubato = "0.16"
+parking_lot = "0.12"
+fancy-regex = "0.14"
+unicode-normalization = "0.1"
+once_cell = "1"
+# Model onarim/kurulum: sha256 dogrulama (cevrimdisi; ag istemcisi yok).
+sha2 = "0.10"
+hex = "0.4"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

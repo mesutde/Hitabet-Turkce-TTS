@@ -1,0 +1,278 @@
+[
+ {
+  "in": "3 elma aldım.",
+  "out": "üç elma aldım."
+ },
+ {
+  "in": "2024 yılında doğdu.",
+  "out": "iki bin yirmi dört yılında doğdu."
+ },
+ {
+  "in": "1.250.000 TL tutarındaki ödeme.",
+  "out": "bir milyon iki yüz elli bin lira tutarındaki ödeme."
+ },
+ {
+  "in": "Toplam tutar 1.250,75 TL.",
+  "out": "toplam tutar bin iki yüz elli lira yetmiş beş kuruş."
+ },
+ {
+  "in": "%95 başarı oranı.",
+  "out": "yüzde doksan beş başarı oranı."
+ },
+ {
+  "in": "Sonuç %12,5 arttı.",
+  "out": "sonuç yüzde on iki buçuk arttı."
+ },
+ {
+  "in": "3. katta oturuyor.",
+  "out": "üçüncü katta oturuyor."
+ },
+ {
+  "in": "2. Abdülhamid dönemi.",
+  "out": "ikinci abdülhamid dönemi."
+ },
+ {
+  "in": "12'nci deneme.",
+  "out": "on ikinci deneme."
+ },
+ {
+  "in": "Sıra numaranız 12. Lütfen bekleyin.",
+  "out": "sıra numaranız on iki. lütfen bekleyin."
+ },
+ {
+  "in": "5 üzerinden 4 puan.",
+  "out": "beş üzerinden dört puan."
+ },
+ {
+  "in": "2026/1847 oranı.",
+  "out": "iki bin yirmi altı bölü bin sekiz yüz kırk yedi oranı."
+ },
+ {
+  "in": "3/4 su bardağı un.",
+  "out": "dörtte üç su bardağı un."
+ },
+ {
+  "in": "7/24 hizmet veriyoruz.",
+  "out": "yedi yirmi dört hizmet veriyoruz."
+ },
+ {
+  "in": "45/3 numaralı daire.",
+  "out": "kırk beş bölü üç numaralı daire."
+ },
+ {
+  "in": "Telefonu 05321234567.",
+  "out": "telefonu sıfır beş yüz otuz iki, yüz yirmi üç, kırk beş, altmış yedi."
+ },
+ {
+  "in": "Bize 0212 555 12 34 numarasından ulaşın.",
+  "out": "bize sıfır iki yüz on iki, beş yüz elli beş, on iki, otuz dört numarasından ulaşın."
+ },
+ {
+  "in": "+90 532 123 45 67 arayın.",
+  "out": "artı doksan, beş yüz otuz iki, yüz yirmi üç, kırk beş, altmış yedi arayın."
+ },
+ {
+  "in": "19. yüzyıl edebiyatı.",
+  "out": "on dokuzuncu yüzyıl edebiyatı."
+ },
+ {
+  "in": "II. Abdülhamid tahttaydı.",
+  "out": "ikinci abdülhamid tahttaydı."
+ },
+ {
+  "in": "Warcraft III oynuyoruz.",
+  "out": "warcraft üç oynuyoruz."
+ },
+ {
+  "in": "Sınavdan 100 üzerinden 085 aldım.",
+  "out": "sınavdan yüz üzerinden sıfır seksen beş aldım."
+ },
+ {
+  "in": "Aradaki fark -5 derece.",
+  "out": "aradaki fark eksi beş derece."
+ },
+ {
+  "in": "3-5 gün içinde gelir.",
+  "out": "üç ile beş gün içinde gelir."
+ },
+ {
+  "in": "Sezon 2003-04 çok iyiydi.",
+  "out": "sezon iki bin üç dört çok iyiydi."
+ },
+ {
+  "in": "Skor 2-1 bitti.",
+  "out": "skor iki bir bitti."
+ },
+ {
+  "in": "Randevunuz 14 Ekim Salı günü saat 15:30'da.",
+  "out": "randevunuz on dört ekim salı günü saat on beş otuzda."
+ },
+ {
+  "in": "Kargo 9 Ekim 2026, Perşembe gelecek.",
+  "out": "kargo dokuz ekim iki bin yirmi altı, perşembe gelecek."
+ },
+ {
+  "in": "Toplantı 2026-10-09 tarihinde.",
+  "out": "toplantı dokuz ekim iki bin yirmi altı tarihinde."
+ },
+ {
+  "in": "Yarın saat 09:45'te İstanbul'dan kalkıyor.",
+  "out": "yarın saat dokuz kırk beşte istanbul'dan kalkıyor."
+ },
+ {
+  "in": "Film 2 saat 15 dakika 30 saniye sürdü.",
+  "out": "film iki saat on beş dakika otuz saniye sürdü."
+ },
+ {
+  "in": "Sabah 08:00:00'de başlıyoruz.",
+  "out": "sabah sekiz saatta başlıyoruz."
+ },
+ {
+  "in": "Pazartesi ile Cuma arası açığız.",
+  "out": "pazartesi ile cuma arası açığız."
+ },
+ {
+  "in": "Pzt ve Cum günleri kapalıyız.",
+  "out": "pzt ve cum günleri kapalıyız."
+ },
+ {
+  "in": "₺12,50 ödedim.",
+  "out": "on iki lira elli kuruş ödedim."
+ },
+ {
+  "in": "100 dolar bozdurdum.",
+  "out": "yüz dolar bozdurdum."
+ },
+ {
+  "in": "50 avro gönderdi.",
+  "out": "elli avro gönderdi."
+ },
+ {
+  "in": "Dr. Ayşe Yılmaz ile görüşün.",
+  "out": "doktor ayşe yılmaz ile görüşün."
+ },
+ {
+  "in": "Prof. Dr. Mehmet Bey geldi.",
+  "out": "profesör doktor mehmet bey geldi."
+ },
+ {
+  "in": "5 kg un ve 2 L su aldım.",
+  "out": "beş kilogram un ve iki litre su aldım."
+ },
+ {
+  "in": "90 km/s hızla gidiyordu.",
+  "out": "saatte doksan kilometre hızla gidiyordu."
+ },
+ {
+  "in": "Oda 30 metrekare.",
+  "out": "oda otuz metrekare."
+ },
+ {
+  "in": "Kan grubun A Rh+ mi?",
+  "out": "kan grubun a eraj pozitif mi?"
+ },
+ {
+  "in": "Günde 2x1 tablet alın.",
+  "out": "günde iki defa bir tablet alın."
+ },
+ {
+  "in": "Tansiyonum 120/80 mmHg çıktı.",
+  "out": "tansiyonum yüz yirmiye seksen milimetre cıva çıktı."
+ },
+ {
+  "in": "SGK, SMS ve TBMM kısaltmaları.",
+  "out": "segeka, esemes ve tebememe kısaltmaları."
+ },
+ {
+  "in": "THY uçağıyla uçtum.",
+  "out": "teheye uçağıyla uçtum."
+ },
+ {
+  "in": "CEO toplantıya katıldı.",
+  "out": "siio toplantıya katıldı."
+ },
+ {
+  "in": "K vitamini faydalıdır.",
+  "out": "ka vitamini faydalıdır."
+ },
+ {
+  "in": "Ahmet K. aradı.",
+  "out": "ahmet ka aradı."
+ },
+ {
+  "in": "No: 12 D: 5 adresindeyim.",
+  "out": "numara on iki daire beş adresindeyim."
+ },
+ {
+  "in": "Kimlik No gerekiyor.",
+  "out": "kimlik numarası gerekiyor."
+ },
+ {
+  "in": "Sayfa s. 45'e bakın.",
+  "out": "sayfa sayfa kırk beşe bakın."
+ },
+ {
+  "in": "Tel: 0212 555 12 34 / Faks: 0212 555 12 35",
+  "out": "telefon: sıfır iki yüz on iki, beş yüz elli beş, on iki, otuz dört, faks: sıfır iki yüz on iki, beş yüz elli beş, on iki, otuz beş"
+ },
+ {
+  "in": "destek@ornek.com adresine yazın.",
+  "out": "destek et ornek nokta kom adresine yazın."
+ },
+ {
+  "in": "Sitemiz www.ornek.com adresinde.",
+  "out": "sitemiz dabılyu dabılyu dabılyu nokta ornek nokta kom adresinde."
+ },
+ {
+  "in": "https://ornek.com/blog/yazi oku.",
+  "out": "ornek nokta kom bölü blog bölü yazi oku."
+ },
+ {
+  "in": "Kadıköy/İstanbul hattı.",
+  "out": "kadıköy istanbul hattı."
+ },
+ {
+  "in": "Atatürk Cad. No: 5",
+  "out": "atatürk caddesi numara beş"
+ },
+ {
+  "in": "Ekmek & su aldım.",
+  "out": "ekmek ve su aldım."
+ },
+ {
+  "in": "%100 yerli üretim!",
+  "out": "yüzde yüz yerli üretim!"
+ },
+ {
+  "in": "Sıcaklık 25°C oldu.",
+  "out": "sıcaklık yirmi beş derece oldu."
+ },
+ {
+  "in": "A4 kağıt ver.",
+  "out": "a dört kağıt ver."
+ },
+ {
+  "in": "COVID-19 atlattım.",
+  "out": "kovid on dokuz atlattım."
+ },
+ {
+  "in": "Saat 14:30'da buluşalım mı?",
+  "out": "saat on dört otuzda buluşalım mı?"
+ },
+ {
+  "in": "MERHABA DÜNYA NASILSIN",
+  "out": "merhaba dünya nasılsın"
+ },
+ {
+  "in": "X-ray çektirdim.",
+  "out": "iksrey çektirdim."
+ },
+ {
+  "in": "2 GB'lık dosya indirdim.",
+  "out": "iki gigabaytlık dosya indirdim."
+ },
+ {
+  "in": "IBAN TR12 0001 0000 0000 0000 0000 01 nedir?",
+  "out": "iban te re, bir iki, sıfır sıfır sıfır bir, sıfır sıfır sıfır sıfır, sıfır sıfır sıfır sıfır, sıfır sıfır sıfır sıfır, sıfır sıfır sıfır sıfır, sıfır bir nedir?"
+ }
+]
