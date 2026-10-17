@@ -1,4 +1,4 @@
-export type ModelId = "ema-lightning" | "antalia-mini";
+export type ModelId = "ema-lightning" | "antalia-mini" | "ahenk-cep";
 
 export interface TtsConfig {
   /** Seçili model (settings.json ile kalıcı). */
@@ -25,6 +25,9 @@ export interface TtsConfig {
   temperature: number;
   /** Antalia: ton filtresi + limiter. EMA yok sayar. */
   eq: boolean;
+  /** Ahenk Cep: üslup (neutral | angry | calm | cheerful | empathetic | sad | surprised).
+   *  Diğer modeller yok sayar. */
+  style: string;
   /** Arayüz teması: dark | light | sepia | contrast. Sentezi etkilemez. */
   theme: string;
 }

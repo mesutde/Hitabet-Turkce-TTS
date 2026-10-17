@@ -46,6 +46,7 @@ export default function App() {
     cfg: 2.0,
     temperature: 0.6,
     eq: true,
+    style: "neutral",
     theme: "dark",
   });
   const [apiStatus, setApiStatus] = useState<ApiStatus | null>(null);
@@ -287,6 +288,7 @@ export default function App() {
         cfg: 2.0,
         temperature: 0.6,
         eq: true,
+        style: "neutral",
       };
       await pushConfig(next, "Varsayılan profil uygulandı");
       return;
@@ -387,7 +389,7 @@ export default function App() {
       const picked = await open({
         directory: true,
         multiple: false,
-        title: "Model paket klasörünü seçin (altında ema-lightning/ ve antalia-mini/)",
+        title: "Model paket klasörünü seçin (altında ema-lightning/, antalia-mini/ ve ahenk/)",
       });
       if (typeof picked !== "string" || !picked) {
         return;
@@ -486,6 +488,7 @@ export default function App() {
       cfg: 2.0,
       temperature: 0.6,
       eq: true,
+      style: "neutral",
     };
     setConfig(next);
     try {
@@ -590,7 +593,7 @@ export default function App() {
         <section className="panel">
           <h2>Model Ayarları</h2>
           <div className="form-group">
-            <label>Modellerin Kök Dizini (altında onnx/ + antalia/)</label>
+            <label>Modellerin Kök Dizini (altında onnx/ + antalia/ + ahenk/)</label>
             <div className="input-row">
               <input
                 type="text"
@@ -608,7 +611,7 @@ export default function App() {
                     const picked = await open({
                       directory: true,
                       multiple: false,
-                      title: "Modellerin kök klasörünü seçin (altında onnx/ ve antalia/ olmalı)",
+                      title: "Modellerin kök klasörünü seçin (altında onnx/, antalia/ ve ahenk/ olmalı)",
                     });
                     if (typeof picked === "string" && picked) {
                       setModelDir(picked);
@@ -653,9 +656,9 @@ export default function App() {
                     type="button"
                     className="btn btn-secondary btn-small"
                     onClick={() => handleDownload(m.id)}
-                    title="Kurulu dizindeki models/ altına kur/doğrula (klasör sormaz, çevrimdışı)"
+                    title="Modeli Kur: kurulu dizindeki models/ altına kur/doğrula (klasör sormaz, çevrimdışı)"
                   >
-                    Modeli Kur
+                    Kur
                   </button>
                   {!m.ready && (
                     <button
@@ -663,18 +666,18 @@ export default function App() {
                       className="btn btn-secondary btn-small"
                       disabled={downloading?.model === m.id}
                       onClick={() => handleInstallFromFolder(m.id)}
-                      title="USB/yedek klasörden eksik dosyaları kur (sha256 doğrulamalı, çevrimdışı)"
+                      title="Klasörden Kur: USB/yedek klasörden eksik dosyaları kur (sha256 doğrulamalı, çevrimdışı)"
                     >
-                      {downloading?.model === m.id ? "Kuruluyor..." : "Klasörden Kur"}
+                      {downloading?.model === m.id ? "Kuruluyor..." : "Klasörden"}
                     </button>
                   )}
                   <button
                     type="button"
                     className="btn btn-secondary btn-small"
                     onClick={() => handleCheckUpdates(m.id)}
-                    title="Yerel dosyaları gömülü listeyle karşılaştır (çevrimdışı bütünlük denetimi)"
+                    title="Güncellemeleri Denetle: yerel dosyaları gömülü listeyle karşılaştır (çevrimdışı bütünlük denetimi)"
                   >
-                    Güncellemeleri Denetle
+                    Denetle
                   </button>
                 </div>
               </div>
@@ -705,12 +708,13 @@ export default function App() {
           )}
           <div className="form-group">
             <span className="hint-text">
-              Kurulum iki modeli de gömülü getirir; internet gerekmez.
-              "Modeli Kur" kurulu dizindeki models/ klasörünü hazırlar
+              Kurulum üç modeli de gömülü getirir; internet gerekmez.
+              "Kur" kurulu dizindeki models/ klasörünü hazırlar
               (yoksa yaratır, klasör sormaz). Dosya silinir/bozulursa
-              "Klasörden Kur" ile USB'deki ya da yedek klasörden
-              onarabilirsiniz (paket kökünde ema-lightning/ ve antalia-mini/
-              beklenir, sha256 doğrulamalı).
+              "Klasörden" ile USB'deki ya da yedek klasörden
+              onarabilirsiniz (paket kökünde ema-lightning/, antalia-mini/ ve
+              ahenk/ beklenir, sha256 doğrulamalı). "Denetle" çevrimdışı
+              bütünlük denetimi yapar.
             </span>
           </div>
           <div className="button-row">
@@ -822,6 +826,15 @@ export default function App() {
             >
               WAV Kaydet
             </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setText(DEFAULT_TEXT)}
+              disabled={isSynthesizing}
+              title="Örnek cümleyi yükle (sayı, kısaltma, tarih, soru)"
+            >
+              Örnek Metin
+            </button>
           </div>
         </section>
           </>
@@ -845,7 +858,7 @@ export default function App() {
               ))}
             </select>
             <span className="hint-text">
-              Model + hız + perde + seed + Antalia ayarlarını tek tıkla uygular.
+              Model + hız + perde + seed + model ayarlarını tek tıkla uygular.
             </span>
           </div>
           <div className="form-group">
@@ -1034,10 +1047,65 @@ export default function App() {
               </div>
             </>
           )}
+          {config.model === "ahenk-cep" && (
+            <>
+              <div className="form-group">
+                <label>Üslup (style)</label>
+                <select
+                  value={config.style}
+                  onChange={(e) => handleConfigChange("style", e.target.value)}
+                  title="Ahenk Cep ses üslubu"
+                >
+                  <option value="neutral">Nötr</option>
+                  <option value="angry">Kızgın</option>
+                  <option value="calm">Sakin</option>
+                  <option value="cheerful">Neşeli</option>
+                  <option value="empathetic">Empatik</option>
+                  <option value="sad">Üzgün</option>
+                  <option value="surprised">Şaşkın</option>
+                </select>
+                <span className="hint-text">
+                  Aynı cümleyi seçilen duyguyla okur.
+                </span>
+              </div>
+              <div className="form-group">
+                <label>Euler Adımı (steps): {config.steps}</label>
+                <input
+                  type="range"
+                  min="1"
+                  max="32"
+                  step="1"
+                  value={config.steps}
+                  onChange={(e) =>
+                    handleConfigChange("steps", parseInt(e.target.value))
+                  }
+                />
+                <span className="hint-text">
+                  Varsayılan 16; az adım hızlı, çok adım doğal.
+                </span>
+              </div>
+              <div className="form-group">
+                <label>CFG: {config.cfg.toFixed(1)} (0.5 – 4.0)</label>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="4.0"
+                  step="0.1"
+                  value={config.cfg}
+                  onChange={(e) =>
+                    handleConfigChange("cfg", parseFloat(e.target.value))
+                  }
+                />
+                <span className="hint-text">
+                  Varsayılan 2.0; yüksek değer üslubu daha belirgin yapar.
+                </span>
+              </div>
+            </>
+          )}
           {config.model === "ema-lightning" && (
             <span className="hint-text">
-              Adım/CFG/sıcaklık/EQ yalnız Antalia Mini içindir; EMA Lightning
-              hız + perde + seed ile çalışır.
+              Adım/CFG/sıcaklık/EQ yalnız Antalia Mini; üslup/steps/CFG yalnız
+              Ahenk Cep içindir. EMA Lightning hız + perde + seed ile çalışır.
             </span>
           )}
           <div className="form-group">
@@ -1203,33 +1271,39 @@ export default function App() {
                 </tr>
                 <tr>
                   <td><code>model</code></td>
-                  <td><code>"ema-lightning"</code> / <code>"antalia-mini"</code></td>
+                  <td><code>"ema-lightning"</code> / <code>"antalia-mini"</code> / <code>"ahenk-cep"</code></td>
                   <td>seçili model</td>
                   <td>Hangi model okutsun. Verilmezse arayüzde seçili model kullanılır (gerekirse otomatik yüklenir)</td>
                 </tr>
                 <tr>
                   <td><code>steps</code></td>
-                  <td>1 – 32 (1/2/4/8 önerilir)</td>
+                  <td>1 – 32</td>
                   <td><code>8</code></td>
-                  <td>Yalnız Antalia: akış adımı. EMA yok sayar</td>
+                  <td>Antalia: akış adımı (1/2/4/8). Ahenk Cep: Euler adımı (16 önerilir). EMA yok sayar</td>
                 </tr>
                 <tr>
                   <td><code>cfg</code></td>
                   <td>0.1 – 8.0</td>
                   <td><code>2.0</code></td>
-                  <td>Yalnız Antalia: metne sadakat. EMA yok sayar</td>
+                  <td>Antalia: metne sadakat. Ahenk Cep: üslup gücü (2.0 önerilir). EMA yok sayar</td>
                 </tr>
                 <tr>
                   <td><code>temperature</code></td>
                   <td>0.0 – 2.0</td>
                   <td><code>0.6</code></td>
-                  <td>Yalnız Antalia: tonlama çeşitliliği. EMA yok sayar</td>
+                  <td>Yalnız Antalia: tonlama çeşitliliği. Diğerleri yok sayar</td>
                 </tr>
                 <tr>
                   <td><code>eq</code></td>
                   <td><code>true</code> / <code>false</code></td>
                   <td><code>true</code></td>
-                  <td>Yalnız Antalia: ton filtresi + limiter. EMA yok sayar</td>
+                  <td>Yalnız Antalia: ton filtresi + limiter. Diğerleri yok sayar</td>
+                </tr>
+                <tr>
+                  <td><code>style</code></td>
+                  <td><code>"neutral"</code>, <code>"angry"</code>, <code>"calm"</code>, <code>"cheerful"</code>, <code>"empathetic"</code>, <code>"sad"</code>, <code>"surprised"</code></td>
+                  <td><code>"neutral"</code></td>
+                  <td>Yalnız Ahenk Cep: ses üslubu (Türkçe adlar da geçerli: <code>"kizgin"</code>, <code>"neseli"</code>…). Diğerleri yok sayar</td>
                 </tr>
                 <tr>
                   <td><code>speak</code></td>
@@ -1269,6 +1343,22 @@ export default function App() {
                 Kopyala
               </button>
               <pre>{`curl -X POST http://127.0.0.1:${config.api_port}/speak -H "Content-Type: application/json" -d '{"text":"Merhaba.","model":"antalia-mini","steps":8,"cfg":2.0,"temperature":0.6}'`}</pre>
+            </div>
+
+            <h3>Ahenk Cep ile okut (üslup)</h3>
+            <div className="code-block">
+              <button
+                type="button"
+                className="btn btn-secondary btn-small"
+                onClick={() =>
+                  copyText(
+                    `curl -X POST http://127.0.0.1:${config.api_port}/speak -H "Content-Type: application/json" -d '{"text":"Harika haber!","model":"ahenk-cep","style":"cheerful","steps":16,"cfg":2.0}'`
+                  )
+                }
+              >
+                Kopyala
+              </button>
+              <pre>{`curl -X POST http://127.0.0.1:${config.api_port}/speak -H "Content-Type: application/json" -d '{"text":"Harika haber!","model":"ahenk-cep","style":"cheerful","steps":16,"cfg":2.0}'`}</pre>
             </div>
 
             <h3>Konuşmadan kaydet</h3>
@@ -1332,7 +1422,7 @@ export default function App() {
                 </tr>
                 <tr>
                   <td><code>model</code></td>
-                  <td>Yüklü model (<code>"ema-lightning"</code> / <code>"antalia-mini"</code>, yoksa alan çıkmaz)</td>
+                  <td>Yüklü model (<code>"ema-lightning"</code> / <code>"antalia-mini"</code> / <code>"ahenk-cep"</code>, yoksa alan çıkmaz)</td>
                 </tr>
                 <tr>
                   <td><code>speaking</code></td>

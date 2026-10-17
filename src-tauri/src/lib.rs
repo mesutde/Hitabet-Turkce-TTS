@@ -2,6 +2,7 @@ pub mod tts_engine;
 pub mod turkish_tokenizer;
 pub mod antalia_text;
 pub mod antalia_engine;
+pub mod ahenk_engine;
 mod api_server;
 mod audio_player;
 
@@ -15,11 +16,12 @@ use tts_engine::{ModelId, TtsConfig, TtsEngine};
 use antalia_engine::{AntaliaEngine, AntaliaParams};
 use audio_player::AudioPlayer;
 
-/// Calisabilir motor (iki modelden biri). Imzalar birebir oldugundan
+/// Calisabilir motor (uclu modelden biri). Imzalar birebir oldugundan
 /// UI + HTTP API tek elden konusur; config eslemesi `apply_config` icindedir.
 pub(crate) enum Engine {
     Ema(TtsEngine),
     Antalia(AntaliaEngine),
+    Ahenk(ahenk_engine::AhenkEngine),
 }
 
 impl Engine {
@@ -27,6 +29,7 @@ impl Engine {
         match self {
             Engine::Ema(_) => ModelId::EmaLightning,
             Engine::Antalia(_) => ModelId::AntaliaMini,
+            Engine::Ahenk(_) => ModelId::AhenkCep,
         }
     }
 
@@ -35,6 +38,7 @@ impl Engine {
         match self {
             Engine::Ema(e) => e.update_config(config.clone()),
             Engine::Antalia(a) => a.update_params(antalia_params_from(config)),
+            Engine::Ahenk(a) => a.update_config(config.clone()),
         }
     }
 
@@ -47,6 +51,7 @@ impl Engine {
         match self {
             Engine::Ema(e) => e.synthesize(text, chunk_callback, progress_callback),
             Engine::Antalia(a) => a.synthesize(text, chunk_callback, progress_callback),
+            Engine::Ahenk(a) => a.synthesize(text, chunk_callback, progress_callback),
         }
     }
 
@@ -54,6 +59,7 @@ impl Engine {
         match self {
             Engine::Ema(e) => e.synthesize_to_vec(text),
             Engine::Antalia(a) => a.synthesize_to_vec(text),
+            Engine::Ahenk(a) => a.synthesize_to_vec(text),
         }
     }
 
@@ -65,6 +71,7 @@ impl Engine {
         match self {
             Engine::Ema(e) => e.save_wav(samples, path),
             Engine::Antalia(a) => a.save_wav(samples, path),
+            Engine::Ahenk(a) => a.save_wav(samples, path),
         }
     }
 
@@ -72,6 +79,7 @@ impl Engine {
         match self {
             Engine::Ema(e) => e.stop(),
             Engine::Antalia(a) => a.stop(),
+            Engine::Ahenk(a) => a.stop(),
         }
     }
 
@@ -79,6 +87,7 @@ impl Engine {
         match self {
             Engine::Ema(e) => e.running_handle(),
             Engine::Antalia(a) => a.running_handle(),
+            Engine::Ahenk(a) => a.running_handle(),
         }
     }
 
@@ -86,6 +95,7 @@ impl Engine {
         match self {
             Engine::Ema(e) => e.stop_handle(),
             Engine::Antalia(a) => a.stop_handle(),
+            Engine::Ahenk(a) => a.stop_handle(),
         }
     }
 }
@@ -157,6 +167,14 @@ pub(crate) fn required_files(model: ModelId) -> &'static [&'static str] {
             "symbols.json",
             "null_cond.f32",
         ],
+        ModelId::AhenkCep => &[
+            "text.onnx",
+            "cond.onnx",
+            "step.onnx",
+            "decoder.onnx",
+            "ahenk-cep.json",
+            "vocab.json",
+        ],
     }
 }
 
@@ -210,6 +228,14 @@ pub(crate) fn download_catalog(model: ModelId) -> &'static [CatalogFile] {
             CatalogFile { name: "antalia_vocoder.onnx.data", size: 32653312, sha256: "23cf126beab8acaeae6ba81736d19eb79e6f04d0431f54db394eaebbbea662a2" },
             CatalogFile { name: "symbols.json", size: 256, sha256: "ae4f9cba585c5ded5fdffa030057c74519ae874302a3aed344b5d11758172a0e" },
             CatalogFile { name: "null_cond.f32", size: 768, sha256: "01818b95856c4aab302906d81964099828c2565bd28bb805148908099e73376d" },
+        ],
+        ModelId::AhenkCep => &[
+            CatalogFile { name: "text.onnx", size: 4815801, sha256: "9a1f49d898d485ef1226a6cde101a5da69c8d7ef4fb5891132a882eb6eaa253a" },
+            CatalogFile { name: "cond.onnx", size: 829432, sha256: "a9cfe2ed7793c210af98dc859a8e1e2cf02d81cb827f4a545a92f3666c96056c" },
+            CatalogFile { name: "step.onnx", size: 16801473, sha256: "8f772fb89815e6cc71b23b753a25f7c79cc4280af6c3edb3ee3b2c19dfc07acb" },
+            CatalogFile { name: "decoder.onnx", size: 12058685, sha256: "f4fc10af62b84a867aff3fe4daf3f962f479dc5b9a809d860f3adc0050f381bb" },
+            CatalogFile { name: "ahenk-cep.json", size: 2628, sha256: "5df4d66c71f1dd9442fd973f3b8637861243f7b01e3d17f44cf76c53f3e3d2f6" },
+            CatalogFile { name: "vocab.json", size: 261, sha256: "806deb90fd541ebe20f7b59cfe3afc344b50683cacbcd3015d5b23112ab91a66" },
         ],
     }
 }
@@ -307,6 +333,7 @@ fn resolve_model_dir(app: &AppHandle, model_root: &str, model: ModelId) -> PathB
     let probe = match model {
         ModelId::EmaLightning => "text_encoder.onnx",
         ModelId::AntaliaMini => "antalia_text.onnx",
+        ModelId::AhenkCep => "text.onnx",
     };
     let cwd = std::env::current_dir().ok();
     let exe_dir = std::env::current_exe()
@@ -357,6 +384,15 @@ fn build_engine(
             .map_err(|e| {
                 format!(
                     "Motor baslatilamadi (aranan dizin: {}): {}. Once python scripts/export_antalia_onnx.py ile modelleri uretin.",
+                    resolved.display(),
+                    e
+                )
+            })?,
+        ModelId::AhenkCep => ahenk_engine::AhenkEngine::new(&resolved, config.clone())
+            .map(Engine::Ahenk)
+            .map_err(|e| {
+                format!(
+                    "Motor baslatilamadi (aranan dizin: {}): {}. Modeli Hugging Face (ozgurguler/ahenk-cep-tr, onnx/) klasorunden kurun.",
                     resolved.display(),
                     e
                 )
@@ -804,7 +840,7 @@ async fn model_status(app: AppHandle) -> Result<Vec<ModelStatusDto>, String> {
         .map(|d| migrate_model_dir(&d))
         .unwrap_or_else(|_| "models".into());
     let mut out = Vec::new();
-    for model in [ModelId::EmaLightning, ModelId::AntaliaMini] {
+    for model in [ModelId::EmaLightning, ModelId::AntaliaMini, ModelId::AhenkCep] {
         let path = resolve_model_dir(&app, &root, model);
         let mut missing = Vec::new();
         let mut bytes = 0u64;
@@ -1559,7 +1595,7 @@ mod tests {
 
     #[test]
     fn catalog_covers_required_files() {
-        for model in [ModelId::EmaLightning, ModelId::AntaliaMini] {
+        for model in [ModelId::EmaLightning, ModelId::AntaliaMini, ModelId::AhenkCep] {
             let cat = download_catalog(model);
             let names: Vec<&str> = cat.iter().map(|f| f.name).collect();
             for req in required_files(model) {
@@ -1677,7 +1713,7 @@ mod tests {
     #[test]
     fn active_catalog_is_embedded_and_offline() {
         // Katalog derleme aninda gomuludur; ag gerektirmez.
-        for model in [ModelId::EmaLightning, ModelId::AntaliaMini] {
+        for model in [ModelId::EmaLightning, ModelId::AntaliaMini, ModelId::AhenkCep] {
             let got = active_catalog(model);
             assert_eq!(got.len(), required_files(model).len());
             assert!(got.iter().all(|f| !f.sha256.is_empty() && f.size > 0));

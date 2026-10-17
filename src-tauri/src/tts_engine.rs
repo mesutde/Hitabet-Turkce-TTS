@@ -38,6 +38,8 @@ pub enum ModelId {
     EmaLightning,
     #[serde(rename = "antalia-mini")]
     AntaliaMini,
+    #[serde(rename = "ahenk-cep")]
+    AhenkCep,
 }
 
 impl Default for ModelId {
@@ -51,6 +53,7 @@ impl ModelId {
         match self {
             ModelId::EmaLightning => "ema-lightning",
             ModelId::AntaliaMini => "antalia-mini",
+            ModelId::AhenkCep => "ahenk-cep",
         }
     }
 
@@ -58,6 +61,7 @@ impl ModelId {
         match self {
             ModelId::EmaLightning => "EMA Lightning",
             ModelId::AntaliaMini => "Antalia Mini",
+            ModelId::AhenkCep => "Ahenk Cep",
         }
     }
 
@@ -66,6 +70,7 @@ impl ModelId {
         match self {
             ModelId::EmaLightning => "onnx",
             ModelId::AntaliaMini => "antalia",
+            ModelId::AhenkCep => "ahenk",
         }
     }
 }
@@ -90,6 +95,12 @@ fn default_eq() -> bool {
 /// Sentezi etkilemez; settings.json ile kalici olmasi icin config'tedir.
 fn default_theme() -> String {
     "dark".to_string()
+}
+
+/// Ahenk Cep: uslup (neutral, angry, calm, cheerful, empathetic, sad, surprised).
+/// Diger motorlar yok sayar.
+fn default_style() -> String {
+    "neutral".to_string()
 }
 
 #[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
@@ -130,6 +141,9 @@ pub struct TtsConfig {
     /// Arayuz temasi. Sentezi etkilemez (motorlar okumaz).
     #[serde(default = "default_theme")]
     pub theme: String,
+    /// Ahenk Cep: uslup. Diger motorlar yok sayar.
+    #[serde(default = "default_style")]
+    pub style: String,
 }
 
 impl Default for TtsConfig {
@@ -151,6 +165,7 @@ impl Default for TtsConfig {
             temperature: default_temperature(),
             eq: default_eq(),
             theme: default_theme(),
+            style: default_style(),
         }
     }
 }
@@ -627,14 +642,15 @@ pub fn window_spans(frames: usize, first_window: usize) -> Vec<(usize, usize)> {
 
 /// Parcalar arasi tasinan akis durumu: perde kaydirici + parca tamponu.
 /// Cumle sonu duraklamalari da buradan gecer (tam sessizlik, tik yok).
-struct Streamer {
+/// (Ahenk motoru da kullanir: pub(crate).)
+pub(crate) struct Streamer {
     carry: Vec<f32>,
     resamp: LinearResampler,
     chunk_size: usize,
 }
 
 impl Streamer {
-    fn new(config: &TtsConfig) -> Self {
+    pub(crate) fn new(config: &TtsConfig) -> Self {
         Self {
             carry: Vec::with_capacity(config.chunk_size.max(64) * 2),
             resamp: LinearResampler::new(pitch_ratio(config.pitch)),
@@ -643,7 +659,7 @@ impl Streamer {
     }
 
     /// Pencere sesini isler; false donerse durduruldu.
-    fn push_audio(
+    pub(crate) fn push_audio(
         &mut self,
         win: &[f32],
         chunk_callback: &mut dyn FnMut(&[f32]),
@@ -656,7 +672,7 @@ impl Streamer {
     }
 
     /// Tam sessizlik ekler (parca arasi duraklama). false donerse durduruldu.
-    fn push_silence(
+    pub(crate) fn push_silence(
         &mut self,
         n: usize,
         chunk_callback: &mut dyn FnMut(&[f32]),
@@ -682,7 +698,7 @@ impl Streamer {
         true
     }
 
-    fn flush_carry(
+    pub(crate) fn flush_carry(
         &mut self,
         chunk_callback: &mut dyn FnMut(&[f32]),
         running: &AtomicBool,
@@ -697,7 +713,7 @@ impl Streamer {
 /// Deterministik Gaussian gurultu: SplitMix64 + Box-Muller.
 /// Python'daki torch.Generator(manual_seed) ile bit-bit ayni DEGIL;
 /// ayni seed ayni sesi verir (uygulama ici tekrarlanabilirlik).
-fn seeded_gaussian(seed: u64, steps: usize, frames: usize, dim: usize) -> Vec<f32> {
+pub(crate) fn seeded_gaussian(seed: u64, steps: usize, frames: usize, dim: usize) -> Vec<f32> {
     let mut rng = SplitMix64(seed);
     let mut out = Vec::with_capacity(steps * frames * dim);
     for _ in 0..steps * frames * dim / 2 + 1 {

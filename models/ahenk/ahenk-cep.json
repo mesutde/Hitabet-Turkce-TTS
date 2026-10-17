@@ -1,0 +1,145 @@
+{
+ "name": "Ahenk Cep",
+ "version": 1,
+ "sample_rate": 48000,
+ "hop": 1920,
+ "fps": 25,
+ "latent_dim": 64,
+ "d": 224,
+ "vocab": [
+  "<pad>",
+  "<unk>",
+  " ",
+  "!",
+  "\"",
+  "%",
+  "&",
+  "'",
+  "(",
+  ")",
+  ",",
+  "-",
+  ".",
+  "/",
+  ":",
+  ";",
+  "?",
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "ç",
+  "ö",
+  "ü",
+  "ğ",
+  "ı",
+  "ş"
+ ],
+ "styles": [
+  "neutral",
+  "angry",
+  "calm",
+  "cheerful",
+  "empathetic",
+  "sad",
+  "surprised",
+  "laughter"
+ ],
+ "defaults": {
+  "steps": 16,
+  "cfg": 2.0
+ },
+ "limits": {
+  "max_word_frames": 250,
+  "max_frames": 3000,
+  "window": 100,
+  "context": 8
+ },
+ "files": {
+  "text": {
+   "fp32": {
+    "file": "text.onnx",
+    "bytes": 4815801,
+    "sha256": "9a1f49d898d485ef1226a6cde101a5da69c8d7ef4fb5891132a882eb6eaa253a"
+   },
+   "f16": {
+    "file": "text.f16.onnx",
+    "bytes": 2422701,
+    "sha256": "5905a2f17187e2d2dac78cc783dc5c16593bcbf30d5d7faf4d79f7924c4b8b49"
+   },
+   "int8": {
+    "file": "text.int8.onnx",
+    "bytes": 2437675,
+    "sha256": "8fbf3c55d881c9c7135eeef0213142687e051c1d8c69a465040ae6fa15b94946"
+   }
+  },
+  "cond": {
+   "fp32": {
+    "file": "cond.onnx",
+    "bytes": 829432,
+    "sha256": "a9cfe2ed7793c210af98dc859a8e1e2cf02d81cb827f4a545a92f3666c96056c"
+   },
+   "f16": {
+    "file": "cond.f16.onnx",
+    "bytes": 428024,
+    "sha256": "e17adee7414bc02ed64666c75e57df458d502fab63c5b2be8bb0ac8ed87400a7"
+   },
+   "int8": {
+    "file": "cond.int8.onnx",
+    "bytes": 246779,
+    "sha256": "1da9566b339771ca7fcd26a1fecc13379c0e363595f39682567331b566bd8796"
+   }
+  },
+  "step": {
+   "fp32": {
+    "file": "step.onnx",
+    "bytes": 16801473,
+    "sha256": "8f772fb89815e6cc71b23b753a25f7c79cc4280af6c3edb3ee3b2c19dfc07acb"
+   },
+   "f16": {
+    "file": "step.f16.onnx",
+    "bytes": 8486846,
+    "sha256": "92095534931ce960ac08a101a7082b627b6ccf5541ae188e66a63dea455f5672"
+   },
+   "int8": {
+    "file": "step.int8.onnx",
+    "bytes": 4536282,
+    "sha256": "dfdfd0f0c4d4f049338a64d31362f6c9c3afb8b1cd9250a15d4e080c65b1fb76"
+   }
+  },
+  "decoder": {
+   "fp32": {
+    "file": "decoder.onnx",
+    "bytes": 12058685,
+    "sha256": "f4fc10af62b84a867aff3fe4daf3f962f479dc5b9a809d860f3adc0050f381bb"
+   },
+   "f16": {
+    "file": "decoder.f16.onnx",
+    "bytes": 6092374,
+    "sha256": "94dd75f2c8a1da6f7a6cb86d1974caf11f6aa73e965777192c208e9d1aa32d52"
+   }
+  }
+ }
+}

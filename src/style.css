@@ -486,9 +486,10 @@ textarea {
 
 /* Faz C: model kartlari + indirme cubugu */
 .model-cards {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 8px;
+  align-items: stretch;
   margin: 4px 0 12px;
 }
 
@@ -528,6 +529,23 @@ textarea {
 
 .model-state.missing {
   color: #c77b2a;
+}
+
+.model-card .hint-text {
+  font-size: 0.72em;
+  line-height: 1.2;
+}
+
+.model-card .button-row {
+  margin-top: 4px;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.model-card .button-row .btn {
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  border-radius: 6px;
 }
 
 .progress-track {

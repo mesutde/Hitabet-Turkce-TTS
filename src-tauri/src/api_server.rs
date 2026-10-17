@@ -31,19 +31,23 @@ pub struct ApiShared {
 #[derive(Debug, Deserialize)]
 pub struct SpeakRequest {
     pub text: String,
-    /// Model secimi ("ema-lightning" | "antalia-mini"). Verilmezse kayitli model.
+    /// Model secimi ("ema-lightning" | "antalia-mini" | "ahenk-cep").
+    /// Verilmezse kayitli model.
     pub model: Option<ModelId>,
     pub speed: Option<f32>,
     pub pitch: Option<f32>,
     pub seed: Option<u64>,
-    /// Antalia: akis adimi (1/2/4/8). EMA yok sayar.
+    /// Antalia: akis adimi. Ahenk Cep: Euler adimi (varsayilan 16). EMA yok sayar.
     pub steps: Option<usize>,
-    /// Antalia: CFG olcegi. EMA yok sayar.
+    /// Antalia: CFG olcegi. Ahenk Cep: CFG (varsayilan 2.0). EMA yok sayar.
     pub cfg: Option<f32>,
-    /// Antalia: gurultu sicakligi. EMA yok sayar.
+    /// Antalia: gurultu sicakligi. Digerleri yok sayar.
     pub temperature: Option<f32>,
-    /// Antalia: ton filtresi + limiter. EMA yok sayar.
+    /// Antalia: ton filtresi + limiter. Digerleri yok sayar.
     pub eq: Option<bool>,
+    /// Ahenk Cep: uslup ("neutral" | "angry" | "calm" | "cheerful" |
+    /// "empathetic" | "sad" | "surprised"). Digerleri yok sayar.
+    pub style: Option<String>,
     /// Dogrudan konus (varsayilan true). false ise sadece kaydeder.
     pub speak: Option<bool>,
     /// Dosyaya kaydet (varsayilan false). Klasor: Videolar/Hitabet.
@@ -140,6 +144,9 @@ pub fn apply_overrides(mut cfg: TtsConfig, req: &SpeakRequest) -> TtsConfig {
     }
     if let Some(e) = req.eq {
         cfg.eq = e;
+    }
+    if let Some(s) = req.style.as_ref() {
+        cfg.style = s.trim().to_lowercase();
     }
     cfg
 }
@@ -560,6 +567,7 @@ mod tests {
             cfg: None,
             temperature: None,
             eq: None,
+            style: None,
             speak: None,
             save: None,
             filename: None,
@@ -597,11 +605,13 @@ mod tests {
             cfg: Some(99.0),
             temperature: Some(99.0),
             eq: Some(false),
+            style: Some("  Angry ".into()),
             speak: None,
             save: None,
             filename: None,
         };
         let cfg = apply_overrides(base, &r);
+        assert_eq!(cfg.style, "angry");
         assert_eq!(cfg.model, ModelId::AntaliaMini);
         assert_eq!(cfg.speed, 4.0);
         assert_eq!(cfg.pitch, -12.0);

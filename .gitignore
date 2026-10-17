@@ -11,6 +11,7 @@ target
 # Test referanslari (.f32) repoda tutulur - cargo test icin gerekli
 !models/antalia_ref/*.f32
 !models/ref/*.f32
+!models/ahenk_ref/*.f32
 *.wav
 output_*.wav
 tensor_shapes.txt

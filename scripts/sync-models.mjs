@@ -5,8 +5,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-// Faz C: iki model de paketlenir (models/ kok yapisi korunur).
-const subdirs = ["onnx", "antalia"];
+// Faz C: uc model de paketlenir (models/ kok yapisi korunur).
+const subdirs = ["onnx", "antalia", "ahenk"];
 for (const profile of ["release", "debug"]) {
   for (const sub of subdirs) {
     const src = join(root, "models", sub);
