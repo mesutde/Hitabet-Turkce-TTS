@@ -2,7 +2,8 @@
 EMA Lightning : [output_1791712412039.wav](https://github.com/user-attachments/files/33300596/output_1791712412039.wav)
 Antalia Mini  : [output_1791712468199.wav](https://github.com/user-attachments/files/33300605/output_1791712468199.wav)
 
-<img width="800" height="714" alt="image" src="https://github.com/user-attachments/assets/e9a6d69e-b6de-4097-a426-cc632d486b32" />
+<img width="954" height="845" alt="image" src="https://github.com/user-attachments/assets/75a85cd2-c79e-4948-9b17-5eea423ada9e" />
+
 
 
 
